@@ -22,6 +22,14 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
+  // Check deployer balance
+  const balance = await hre.ethers.provider.getBalance(deployer);
+  console.log("Deployer balance:", hre.ethers.formatEther(balance), "MONAD");
+  
+  if (balance < hre.ethers.parseEther("0.01")) {
+    throw new Error("Insufficient balance. Please get some MONAD testnet tokens from the faucet.");
+  }
+
   await deploy("YourContract", {
     from: deployer,
     // Contract constructor arguments
